@@ -53,11 +53,11 @@ function updateClock() {
 
   // Greeting based on hour
   let greetingText;
-  if (h >= 5 && h <= 11) {
+  if (h >= 4 && h <= 10) {
     greetingText = 'Good Morning';
-  } else if (h >= 12 && h <= 17) {
+  } else if (h >= 11 && h <= 14) {
     greetingText = 'Good Afternoon';
-  } else if (h >= 18 && h <= 21) {
+  } else if (h >= 15 && h <= 18) {
     greetingText = 'Good Evening';
   } else {
     greetingText = 'Good Night';
