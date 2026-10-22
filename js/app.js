@@ -1,12 +1,12 @@
 /* =========================================================
    Life Dashboard — app.js
-   All application logic in one file.
    LocalStorage keys: "tasks", "links", "timerDuration",
                        "userName", "theme"
    ========================================================= */
 
 /* ---------------------------------------------------------
    Section 1 — Theme (Light / Dark Mode)
+   Challenge 1: Toggle light/dark mode, persist to localStorage
    --------------------------------------------------------- */
 const themeToggleBtn = document.getElementById('theme-toggle');
 
@@ -29,6 +29,7 @@ themeToggleBtn.addEventListener('click', function () {
 
 /* ---------------------------------------------------------
    Section 2 — Clock & Greeting
+   Challenge 2: Show custom name in greeting, persist to localStorage
    --------------------------------------------------------- */
 function pad(n) {
   return String(n).padStart(2, '0');
@@ -40,10 +41,8 @@ function updateClock() {
   const m = now.getMinutes();
   const s = now.getSeconds();
 
-  // Time display
   document.getElementById('clock').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
 
-  // Date display
   document.getElementById('date').textContent = now.toLocaleDateString(undefined, {
     weekday: 'long',
     year: 'numeric',
@@ -51,7 +50,6 @@ function updateClock() {
     day: 'numeric',
   });
 
-  // Greeting based on hour
   let greetingText;
   if (h >= 4 && h <= 10) {
     greetingText = 'Good Morning';
@@ -63,62 +61,50 @@ function updateClock() {
     greetingText = 'Good Night';
   }
 
-  const userName = localStorage.getItem('userName') || 'Friend';
-  document.getElementById('greeting').textContent = greetingText + ', ' + userName + '!';
+  const userName = localStorage.getItem('userName');
+  const greetingEl = document.getElementById('greeting');
+  if (userName) {
+    greetingEl.textContent = greetingText + ', ' + userName + '!';
+  } else {
+    greetingEl.textContent = greetingText;
+  }
 }
 
 /* ---------------------------------------------------------
-   Section 3 — Edit Name
+   Section 3 — Edit Name (Challenge 2)
+   Click on greeting text to edit name
    --------------------------------------------------------- */
-const editNameBtn  = document.getElementById('edit-name-btn');
-const nameInput    = document.getElementById('name-input');
-const greetingEl   = document.getElementById('greeting');
+const greetingEl = document.getElementById('greeting');
 
-function showNameInput() {
-  const currentName = localStorage.getItem('userName') || 'Friend';
-  nameInput.value = currentName;
-  nameInput.classList.remove('hidden');
-  greetingEl.classList.add('hidden');
-  editNameBtn.classList.add('hidden');
-  nameInput.focus();
-}
+greetingEl.style.cursor = 'pointer';
+greetingEl.title = 'Click to set your name';
 
-function saveName() {
-  const trimmed = nameInput.value.trim();
-  if (trimmed) {
-    localStorage.setItem('userName', trimmed);
-  }
-  nameInput.classList.add('hidden');
-  greetingEl.classList.remove('hidden');
-  editNameBtn.classList.remove('hidden');
-  updateClock(); // refresh greeting immediately
-}
-
-editNameBtn.addEventListener('click', showNameInput);
-
-nameInput.addEventListener('blur', saveName);
-
-nameInput.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') {
-    nameInput.blur(); // triggers blur → saveName
-  } else if (e.key === 'Escape') {
-    nameInput.value = localStorage.getItem('userName') || 'Friend';
-    nameInput.blur();
+greetingEl.addEventListener('click', function () {
+  const currentName = localStorage.getItem('userName') || '';
+  const newName = prompt('Enter your name:', currentName);
+  if (newName !== null) {
+    const trimmed = newName.trim();
+    if (trimmed) {
+      localStorage.setItem('userName', trimmed);
+    } else {
+      localStorage.removeItem('userName');
+    }
+    updateClock();
   }
 });
 
 /* ---------------------------------------------------------
    Section 4 — Focus Timer
+   Challenge 3: Change Pomodoro time, persist to localStorage
    --------------------------------------------------------- */
-let timerInterval  = null;
-let timeLeft       = 0;
-let isRunning      = false;
+let timerInterval = null;
+let timeLeft      = 0;
+let isRunning     = false;
 
-const timerDisplay  = document.getElementById('timer-display');
-const timerStart    = document.getElementById('timer-start');
-const timerStop     = document.getElementById('timer-stop');
-const timerReset    = document.getElementById('timer-reset');
-const timerDurInput = document.getElementById('timer-duration-input');
+const timerDisplay = document.getElementById('timer-display');
+const timerStart   = document.getElementById('timer-start');
+const timerStop    = document.getElementById('timer-stop');
+const timerReset   = document.getElementById('timer-reset');
 
 function getTimerDuration() {
   const saved = parseInt(localStorage.getItem('timerDuration'), 10);
@@ -133,7 +119,6 @@ function renderTimer() {
 
 function initTimer() {
   const dur = getTimerDuration();
-  timerDurInput.value = dur;
   timeLeft = dur * 60;
 }
 
@@ -151,20 +136,17 @@ function playBeep() {
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 1.2);
   } catch (e) {
-    // AudioContext not supported — silently skip
+    // AudioContext not supported
   }
 }
 
 timerStart.addEventListener('click', function () {
   if (isRunning) return;
   if (timeLeft <= 0) {
-    // Reset before starting if already at 0
-    const dur = getTimerDuration();
-    timeLeft = dur * 60;
+    timeLeft = getTimerDuration() * 60;
     renderTimer();
   }
   isRunning = true;
-  timerDurInput.disabled = true;
 
   timerInterval = setInterval(function () {
     timeLeft--;
@@ -173,7 +155,6 @@ timerStart.addEventListener('click', function () {
       clearInterval(timerInterval);
       timerInterval = null;
       isRunning = false;
-      timerDurInput.disabled = false;
       playBeep();
       alert('⏰ Focus session complete! Great work!');
     }
@@ -186,7 +167,6 @@ timerStop.addEventListener('click', function () {
     timerInterval = null;
   }
   isRunning = false;
-  timerDurInput.disabled = false;
 });
 
 timerReset.addEventListener('click', function () {
@@ -195,25 +175,23 @@ timerReset.addEventListener('click', function () {
     timerInterval = null;
   }
   isRunning = false;
-  timerDurInput.disabled = false;
-  const dur = getTimerDuration();
-  timerDurInput.value = dur;
-  timeLeft = dur * 60;
+  timeLeft = getTimerDuration() * 60;
   renderTimer();
 });
 
-timerDurInput.addEventListener('change', function () {
-  let val = parseInt(this.value, 10);
+// Challenge 3: double-click on timer display to change duration
+timerDisplay.style.cursor = 'pointer';
+timerDisplay.title = 'Double-click to change duration';
+
+timerDisplay.addEventListener('dblclick', function () {
+  if (isRunning) return;
+  const current = getTimerDuration();
+  const input = prompt('Set Pomodoro duration (1–60 minutes):', current);
+  if (input === null) return;
+  let val = parseInt(input, 10);
   if (isNaN(val) || val < 1) val = 1;
   if (val > 60) val = 60;
-  this.value = val;
   localStorage.setItem('timerDuration', val);
-  // Reset timer to new duration
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-  isRunning = false;
   timeLeft = val * 60;
   renderTimer();
 });
@@ -236,33 +214,13 @@ function saveTasks() {
 }
 
 function renderTasks() {
-  const sortVal = document.getElementById('sort-select').value;
-  let sorted;
-
-  if (sortVal === 'active') {
-    // Undone tasks first, preserve relative order within each group
-    sorted = tasks.slice().sort(function (a, b) {
-      return Number(a.done) - Number(b.done);
-    });
-  } else if (sortVal === 'completed') {
-    // Done tasks first
-    sorted = tasks.slice().sort(function (a, b) {
-      return Number(b.done) - Number(a.done);
-    });
-  } else {
-    // Default: insertion order
-    sorted = tasks.slice();
-  }
-
   const list = document.getElementById('task-list');
   list.innerHTML = '';
 
-  sorted.forEach(function (task) {
+  tasks.forEach(function (task) {
     const li = document.createElement('li');
     li.className = 'task-item' + (task.done ? ' done' : '');
-    li.dataset.id = task.id;
 
-    // Checkbox
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = task.done;
@@ -276,56 +234,10 @@ function renderTasks() {
       }
     });
 
-    // Task text span
     const span = document.createElement('span');
     span.className = 'task-text';
     span.textContent = task.text;
 
-    // Edit button
-    const editBtn = document.createElement('button');
-    editBtn.className = 'btn-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.setAttribute('aria-label', 'Edit task');
-
-    editBtn.addEventListener('click', function () {
-      if (editBtn.textContent === 'Edit') {
-        // Switch to edit mode
-        const editInput = document.createElement('input');
-        editInput.type = 'text';
-        editInput.className = 'task-edit-input';
-        editInput.value = task.text;
-        editInput.setAttribute('aria-label', 'Edit task text');
-
-        li.replaceChild(editInput, span);
-        editBtn.textContent = 'Save';
-        editInput.focus();
-
-        editInput.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') editBtn.click();
-          if (e.key === 'Escape') {
-            li.replaceChild(span, editInput);
-            editBtn.textContent = 'Edit';
-          }
-        });
-      } else {
-        // Save mode
-        const editInput = li.querySelector('.task-edit-input');
-        const newText = editInput ? editInput.value.trim() : '';
-        if (newText) {
-          const t = tasks.find(function (x) { return x.id === task.id; });
-          if (t) {
-            t.text = newText;
-            saveTasks();
-            renderTasks();
-          }
-        } else {
-          li.replaceChild(span, editInput);
-          editBtn.textContent = 'Edit';
-        }
-      }
-    });
-
-    // Delete button
     const delBtn = document.createElement('button');
     delBtn.className = 'btn btn-danger';
     delBtn.textContent = 'Delete';
@@ -338,51 +250,26 @@ function renderTasks() {
 
     li.appendChild(cb);
     li.appendChild(span);
-    li.appendChild(editBtn);
     li.appendChild(delBtn);
     list.appendChild(li);
   });
 }
 
-// Add task
 document.getElementById('task-add-btn').addEventListener('click', addTask);
 document.getElementById('task-input').addEventListener('keydown', function (e) {
   if (e.key === 'Enter') addTask();
 });
 
 function addTask() {
-  const input   = document.getElementById('task-input');
-  const warning = document.getElementById('task-warning');
-  const text    = input.value.trim();
-
+  const input = document.getElementById('task-input');
+  const text  = input.value.trim();
   if (!text) return;
-
-  // Duplicate check
-  const isDuplicate = tasks.some(function (t) {
-    return t.text.toLowerCase() === text.toLowerCase();
-  });
-
-  if (isDuplicate) {
-    input.classList.add('shake');
-    warning.classList.remove('hidden');
-    setTimeout(function () {
-      input.classList.remove('shake');
-    }, 600);
-    setTimeout(function () {
-      warning.classList.add('hidden');
-    }, 2500);
-    return;
-  }
 
   tasks.push({ id: Date.now(), text: text, done: false });
   saveTasks();
   renderTasks();
   input.value = '';
-  warning.classList.add('hidden');
 }
-
-// Sort change
-document.getElementById('sort-select').addEventListener('change', renderTasks);
 
 /* ---------------------------------------------------------
    Section 6 — Quick Links
@@ -438,7 +325,6 @@ function renderLinks() {
   });
 }
 
-// Add link
 document.getElementById('link-add-btn').addEventListener('click', addLink);
 
 function addLink() {
@@ -452,7 +338,6 @@ function addLink() {
     return;
   }
 
-  // Ensure url has a protocol
   if (!/^https?:\/\//i.test(url)) {
     url = 'https://' + url;
   }
@@ -468,22 +353,13 @@ function addLink() {
    Section 7 — Initialisation
    --------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function () {
-  // Theme
   initTheme();
-
-  // Clock
   updateClock();
   setInterval(updateClock, 1000);
-
-  // Timer
   initTimer();
   renderTimer();
-
-  // Tasks
   loadTasks();
   renderTasks();
-
-  // Links
   loadLinks();
   renderLinks();
 });

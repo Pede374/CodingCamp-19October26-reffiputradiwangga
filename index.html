@@ -20,18 +20,7 @@
     <div class="card clock-card">
       <div id="clock">00:00:00</div>
       <div id="date"></div>
-      <div class="greeting-row">
-        <span id="greeting">Good Morning, Friend!</span>
-        <button id="edit-name-btn" class="edit-name-btn" aria-label="Edit name">✏️</button>
-        <input
-          type="text"
-          id="name-input"
-          class="name-input hidden"
-          placeholder="Enter your name"
-          maxlength="30"
-          aria-label="Your name"
-        />
-      </div>
+      <div id="greeting">Good Morning</div>
     </div>
 
     <!-- Middle Row: Timer + Tasks -->
@@ -39,47 +28,26 @@
 
       <!-- Card 2: Focus Timer -->
       <div class="card timer-card">
-        <h2 class="card-title">⏱ Focus Timer</h2>
+        <h2 class="card-title">Focus Timer</h2>
         <div id="timer-display">25:00</div>
         <div class="timer-buttons">
           <button id="timer-start" class="btn btn-primary">Start</button>
           <button id="timer-stop" class="btn btn-secondary">Stop</button>
           <button id="timer-reset" class="btn btn-secondary">Reset</button>
         </div>
-        <div class="timer-duration-row">
-          <label for="timer-duration-input">Duration:</label>
-          <input
-            type="number"
-            id="timer-duration-input"
-            min="1"
-            max="60"
-            value="25"
-            aria-label="Timer duration in minutes"
-          />
-          <span>min</span>
-        </div>
       </div>
 
       <!-- Card 3: Tasks -->
       <div class="card tasks-card">
-        <h2 class="card-title">✅ To-Do List</h2>
+        <h2 class="card-title">Tasks</h2>
         <div class="task-add-row">
           <input
             type="text"
             id="task-input"
-            placeholder="Add a new task…"
+            placeholder="Add a new task..."
             aria-label="New task"
           />
           <button id="task-add-btn" class="btn btn-primary">Add</button>
-        </div>
-        <p id="task-warning" class="task-warning hidden" role="alert">Task already exists!</p>
-        <div class="sort-row">
-          <label for="sort-select">Sort:</label>
-          <select id="sort-select" aria-label="Sort tasks">
-            <option value="default">Default</option>
-            <option value="active">Active first</option>
-            <option value="completed">Completed first</option>
-          </select>
         </div>
         <ul id="task-list" aria-label="Task list"></ul>
       </div>
@@ -88,7 +56,7 @@
 
     <!-- Card 4: Quick Links -->
     <div class="card links-card">
-      <h2 class="card-title">🔗 Quick Links</h2>
+      <h2 class="card-title">Quick Links</h2>
       <div class="link-add-row">
         <input
           type="text"
@@ -99,7 +67,7 @@
         <input
           type="text"
           id="link-url-input"
-          placeholder="https://example.com"
+          placeholder="URL"
           aria-label="Link URL"
         />
         <button id="link-add-btn" class="btn btn-primary">Add Link</button>

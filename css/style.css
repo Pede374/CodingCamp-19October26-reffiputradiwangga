@@ -89,6 +89,10 @@ body {
 /* ---------------------------------------------------------
    6. Clock Card
    --------------------------------------------------------- */
+.clock-card {
+  text-align: center;
+}
+
 #clock {
   font-size: 3.5rem;
   font-weight: 700;
@@ -104,53 +108,23 @@ body {
   margin-bottom: 10px;
 }
 
-.greeting-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
 #greeting {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: #374151;
 }
 
-.edit-name-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-left: 8px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-.edit-name-btn:hover {
-  background: rgba(91, 106, 240, 0.1);
-}
-
-.name-input {
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  padding: 6px 10px;
-  border: 2px solid #5b6af0;
-  border-radius: 8px;
-  outline: none;
-  margin-left: 4px;
-  width: 200px;
-  transition: border-color 0.2s;
-}
-
-.name-input:focus {
-  border-color: #4a59d8;
+#greeting:hover {
+  text-decoration: underline dotted #5b6af0;
 }
 
 /* ---------------------------------------------------------
    7. Focus Timer Card
    --------------------------------------------------------- */
+.timer-card {
+  text-align: center;
+}
+
 #timer-display {
   font-size: 3rem;
   font-weight: 700;
@@ -160,46 +134,14 @@ body {
   letter-spacing: 2px;
 }
 
+#timer-display:hover {
+  text-decoration: underline dotted #5b6af0;
+}
+
 .timer-buttons {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 16px;
-}
-
-.timer-duration-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.timer-duration-row label {
-  font-weight: 500;
-}
-
-#timer-duration-input {
-  width: 60px;
-  padding: 6px 8px;
-  border: 2px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
-  text-align: center;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-#timer-duration-input:focus {
-  border-color: #5b6af0;
-}
-
-#timer-duration-input:disabled {
-  background: #f3f4f6;
-  color: #9ca3af;
-  cursor: not-allowed;
 }
 
 /* ---------------------------------------------------------
@@ -208,7 +150,7 @@ body {
 .task-add-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 #task-input {
@@ -223,36 +165,6 @@ body {
 }
 
 #task-input:focus {
-  border-color: #5b6af0;
-}
-
-.task-warning {
-  font-size: 0.82rem;
-  color: #ef4444;
-  margin-bottom: 8px;
-  min-height: 18px;
-}
-
-.sort-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 0.9rem;
-}
-
-#sort-select {
-  padding: 6px 10px;
-  border: 2px solid #d1d5db;
-  border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-#sort-select:focus {
   border-color: #5b6af0;
 }
 
@@ -290,16 +202,6 @@ body {
 .task-item.done .task-text {
   text-decoration: line-through;
   opacity: 0.5;
-}
-
-.task-edit-input {
-  flex: 1;
-  padding: 6px 10px;
-  border: 2px solid #5b6af0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  font-family: 'Inter', sans-serif;
-  outline: none;
 }
 
 /* ---------------------------------------------------------
@@ -348,23 +250,6 @@ body {
 
 .btn-danger:hover {
   background: #dc2626;
-}
-
-.btn-edit {
-  background: #f3f4f6;
-  color: #374151;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 0.82rem;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-edit:hover {
-  background: #e5e7eb;
 }
 
 /* ---------------------------------------------------------
@@ -433,32 +318,14 @@ body {
 }
 
 /* ---------------------------------------------------------
-   11. Shake Animation (duplicate task feedback)
-   --------------------------------------------------------- */
-@keyframes shake {
-  0%   { transform: translateX(0); }
-  15%  { transform: translateX(-6px); }
-  30%  { transform: translateX(6px); }
-  45%  { transform: translateX(-6px); }
-  60%  { transform: translateX(6px); }
-  75%  { transform: translateX(-4px); }
-  90%  { transform: translateX(4px); }
-  100% { transform: translateX(0); }
-}
-
-.shake {
-  animation: shake 0.6s ease;
-}
-
-/* ---------------------------------------------------------
-   12. Utility
+   11. Utility
    --------------------------------------------------------- */
 .hidden {
   display: none !important;
 }
 
 /* ---------------------------------------------------------
-   13. Dark Mode
+   12. Dark Mode
    --------------------------------------------------------- */
 body.dark {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -503,34 +370,12 @@ body.dark textarea::placeholder {
   color: #6b7280;
 }
 
-body.dark #timer-duration-input:disabled {
-  background: #252535;
-  color: #6b7280;
-}
-
-body.dark .edit-name-btn {
-  color: #c4c9f7;
-}
-
-body.dark .btn-edit {
-  background: #2d2d44;
-  color: #e2e8f0;
-}
-
-body.dark .btn-edit:hover {
-  background: #3a3a55;
-}
-
 body.dark .timer-duration-row {
   color: #a0aec0;
 }
 
-body.dark .sort-row {
-  color: #a0aec0;
-}
-
 /* ---------------------------------------------------------
-   14. Responsive — mobile
+   13. Responsive — mobile
    --------------------------------------------------------- */
 @media (max-width: 640px) {
   .middle-row {
